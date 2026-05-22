@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading… | The CCM Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">The CCM Hub</a>
+            <nav class="nav-links">
+                <a href="index.html">Spotlights</a>
+                <a href="about.html">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ERROR STATE -->
+    <div id="post-error" class="article-wrapper error-state" style="display:none;">
+        <h2>Post not found.</h2>
+        <p>We couldn't find that spotlight. It may have been moved or unpublished.</p>
+        <a href="index.html" class="btn">← Back to Archive</a>
+    </div>
+
+    <!-- ARTICLE (hidden until loaded) -->
+    <div id="post-content" class="article-wrapper" style="display:none;">
+
+        <a href="index.html" class="back-link">← Back to Archive</a>
+
+        <div id="article-hero" class="article-hero"></div>
+
+        <span class="article-tag">Spotlight</span>
+        <h1 class="article-title" id="article-title"></h1>
+
+        <div class="article-byline">
+            <span class="byline-text">By Samuel Dahunsi</span>
+            <span class="byline-dot"></span>
+            <span class="byline-text" id="article-date"></span>
+            <span class="byline-dot"></span>
+            <span class="byline-text">Artist Spotlight</span>
+        </div>
+
+        <div class="article-body" id="article-body"></div>
+
+        <!-- MUSIC EMBED — rendered only when spotifyEmbed exists -->
+        <div class="music-embed-box" id="music-embed-box" style="display:none;">
+            <div class="music-embed-header">
+                <div class="music-embed-icon">♫</div>
+                <div class="music-embed-header-text">
+                    <h3>Featured Listen</h3>
+                    <p>Stream while you read</p>
+                </div>
+            </div>
+            <div id="music-player-container"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>The CCM Hub</h3>
+                <p>Chasing the heart behind the harmony.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Explore</h4>
+                <a href="index.html#spotlights">Spotlights</a>
+                <a href="index.html#playlists">Playlists</a>
+                <a href="about.html">About Us</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 The CCM Hub. Built with heart.
+        </div>
+    </footer>
+
+    <script>
+        // ==========================================
+        // CONFIG (must match script.js)
+        // ==========================================
+        const SPACE_ID     = "0fo9oivnc9eg";
+        const ACCESS_TOKEN = "eyIZSbaPdv4n-Lc80i7L7gJWVVDHfMa8Vj5-HL_b-hI";
+        const BASE_URL     = `https://cdn.contentful.com/spaces/${SPACE_ID}/environments/master`;
+        const FALLBACK_IMG = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop";
+
+        // ==========================================
+        // BOOT
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", async () => {
+            const slug = new URLSearchParams(window.location.search).get("slug");
+
+            if (!slug) {
+                showError();
+                return;
+            }
+
+            const post = await fetchPostBySlug(slug);
+
+            if (!post) {
+                showError();
+                return;
+            }
+
+            renderPost(post);
+        });
+
+        // ==========================================
+        // FETCH SINGLE POST BY SLUG
+        // ==========================================
+        async function fetchPostBySlug(slug) {
+            const url = `${BASE_URL}/entries`
+                      + `?access_token=${ACCESS_TOKEN}`
+                      + `&content_type=post`
+                      + `&fields.slug=${encodeURIComponent(slug)}`
+                      + `&include=1`
+                      + `&limit=1`;
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const data = await res.json();
+                if (!data.items?.length) return null;
+
+                // Build image map
+                const imageMap = {};
+                (data.includes?.Asset ?? []).forEach(asset => {
+                    if (asset.sys?.id && asset.fields?.file?.url) {
+                        imageMap[asset.sys.id] = "https:" + asset.fields.file.url;
+                    }
+                });
+
+                const item    = data.items[0];
+                const f       = item.fields;
+                const imageId = f.image?.sys?.id ?? null;
+
+                return {
+                    title:        f.title        ?? "Untitled",
+                    excerpt:      f.excerpt      ?? "",
+                    slug:         f.slug         ?? slug,
+                    body:         f.body         ?? "",
+                    imageUrl:     imageId ? imageMap[imageId] : FALLBACK_IMG,
+                    spotifyEmbed: f.spotifyEmbed ?? null,
+                    createdAt:    item.sys.createdAt ?? null,
+                };
+            } catch (err) {
+                console.error("fetchPostBySlug failed:", err);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // RENDER POST
+        // ==========================================
+        function renderPost(post) {
+            // Page <title>
+            document.title = `${post.title} | The CCM Hub`;
+
+            // Hero banner
+            const hero = document.getElementById("article-hero");
+            if (hero) {
+                hero.style.backgroundImage = `url('${post.imageUrl}')`;
+            }
+
+            // Title
+            const titleEl = document.getElementById("article-title");
+            if (titleEl) titleEl.textContent = post.title;
+
+            // Date
+            const dateEl = document.getElementById("article-date");
+            if (dateEl && post.createdAt) {
+                dateEl.textContent = new Date(post.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric", month: "long", day: "numeric"
+                });
+            }
+
+            // Body
+            renderBody(post.body);
+
+            // Music embed — THE KEY FIX:
+            // All logic is inside renderPost(), which only runs after `post` is confirmed.
+            // No brackets outside, no scope issues.
+            renderMusicEmbed(post.spotifyEmbed);
+
+            // Show the article
+            document.getElementById("post-content").style.display = "block";
+        }
+
+        // ==========================================
+        // RENDER BODY TEXT
+        // Handles both plain string and Contentful Rich Text JSON
+        // ==========================================
+        function renderBody(body) {
+            const el = document.getElementById("article-body");
+            if (!el) return;
+
+            if (!body) {
+                el.innerHTML = `<p style="color:var(--text-muted); font-style:italic;">No content yet.</p>`;
+                return;
+            }
+
+            // Rich Text JSON (object) — walk the node tree for plain text
+            if (typeof body === "object" && body !== null) {
+                const text = extractPlainText(body);
+                el.innerHTML = text
+                    .split(/\n{2,}/)
+                    .filter(Boolean)
+                    .map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`)
+                    .join("");
+                return;
+            }
+
+            // Plain string
+            if (typeof body === "string") {
+                el.innerHTML = body
+                    .split(/\n{2,}/)
+                    .filter(Boolean)
+                    .map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`)
+                    .join("");
+            }
+        }
+
+        // Walks Contentful Rich Text JSON and extracts readable text
+        function extractPlainText(node) {
+            if (!node) return "";
+            if (node.nodeType === "text") return node.value || "";
+            if (!Array.isArray(node.content)) return "";
+
+            const BLOCK_TYPES = new Set([
+                "paragraph","heading-1","heading-2","heading-3",
+                "heading-4","blockquote","list-item"
+            ]);
+
+            return node.content
+                .map(child => {
+                    const text = extractPlainText(child);
+                    return BLOCK_TYPES.has(child.nodeType) ? text + "\n\n" : text;
+                })
+                .join("")
+                .trim();
+        }
+
+        // ==========================================
+        // RENDER MUSIC EMBED
+        // Handles escaped quotes Contentful sometimes introduces
+        // ==========================================
+        function renderMusicEmbed(embedCode) {
+            const box       = document.getElementById("music-embed-box");
+            const container = document.getElementById("music-player-container");
+
+            if (!embedCode || !box || !container) {
+                if (box) box.style.display = "none";
+                return;
+            }
+
+            // Unescape any backslash-escaped quotes from Contentful storage
+            const clean = String(embedCode)
+                .replace(/\\"/g, '"')
+                .replace(/\\'/g, "'");
+
+            container.innerHTML = clean;
+
+            // Ensure iframe fills its container and has no border
+            const iframe = container.querySelector("iframe");
+            if (iframe) {
+                iframe.style.width        = "100%";
+                iframe.style.border       = "none";
+                iframe.style.borderRadius = "8px";
+                iframe.style.display      = "block";
+            }
+
+            box.style.display = "block";
+        }
+
+        // ==========================================
+        // ERROR STATE
+        // ==========================================
+        function showError() {
+            document.getElementById("post-error").style.display   = "block";
+            document.getElementById("post-content").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
