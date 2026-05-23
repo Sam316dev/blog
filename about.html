@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | The CCM Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .about-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 56px 24px 80px;
+        }
+
+        .about-hero {
+            margin-bottom: 52px;
+        }
+
+        .about-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            color: var(--text-main);
+            line-height: 1.15;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .about-hero .lead {
+            font-family: var(--font-body);
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+            font-style: italic;
+        }
+
+        .about-divider {
+            width: 48px;
+            height: 3px;
+            background: var(--accent-primary);
+            border: none;
+            margin: 36px 0;
+            border-radius: 2px;
+        }
+
+        .about-body {
+            font-family: var(--font-body);
+            font-size: 1.12rem;
+            line-height: 1.85;
+            color: var(--text-main);
+        }
+
+        .about-body p {
+            margin-bottom: 1.7rem;
+        }
+
+        .about-body strong {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .founder-card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 24px;
+            align-items: center;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 32px;
+            margin-top: 52px;
+        }
+
+        @media (max-width: 500px) {
+            .founder-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+                justify-items: center;
+            }
+        }
+
+        .founder-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .founder-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .founder-info h4 {
+            font-family: var(--font-ui);
+            font-size: 0.72rem;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .founder-info p {
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .artists-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 28px;
+        }
+
+        .artist-tag {
+            background: #f4eae6;
+            color: var(--accent-primary);
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">The CCM Hub</a>
+            <nav class="nav-links">
+                <a href="index.html#spotlights">Spotlights</a>
+                <a href="index.html#playlists">Playlists</a>
+                <a href="about.html" style="color: var(--accent-primary);">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="about-wrapper">
+
+        <div class="about-hero fade-up">
+            <h1>About I LOVE CCM</h1>
+            <p class="lead">A Nigerian kid who grew up on Don Moen cassette tapes and never stopped listening.</p>
+        </div>
+
+        <hr class="about-divider">
+
+        <div class="about-body fade-up fade-up-1">
+
+            <p>
+                CCM has been part of my life for as long as I can remember. Growing up in Nigeria, I was that kid who knew every Don Moen song by heart before I really understood what worship even meant. The music just hit different. There was something about it that felt bigger than entertainment. It stayed with me.
+            </p>
+
+            <p>
+                Over the years my playlist got bigger. Those classic tape foundations expanded into incredible modern movements like Hillsong, Phil Wickham, Matthew West, and Elevation Worship.
+
+            <p>
+                I started I LOVE CCM because I wanted a place that actually takes this music seriously. Not just playlists and charts, but real conversations about the artists behind the songs, who they are, what drives them, and why their music connects the way it does. <strong>A space for people who love CCM the way I do.</strong>
+            </p>
+
+            <p>
+                If you've been listening since the Rich Mullins era or you just discovered CityAlight last week, you're in the right place. Pull up a chair.
+            </p>
+
+            <p style="font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.2px;">
+                Some of the artists we love around here:
+            </p>
+
+            <div class="artists-grid">
+                <span class="artist-tag">Don Moen</span>
+                <span class="artist-tag">Michael W. Smith</span>
+                <span class="artist-tag">Phil Wickham</span>
+                <span class="artist-tag">Hillsong</span>
+                <span class="artist-tag">Maverick City</span>
+                <span class="artist-tag">Elevation Worship</span>
+                <span class="artist-tag">Casting Crowns</span>
+                <span class="artist-tag">MercyMe</span>
+            </div>
+
+            <p>
+                New spotlights drop regularly. If there's an artist you think deserves a feature, we're all ears.
+            </p>
+
+        </div>
+
+        <div class="founder-card fade-up fade-up-2">
+            <div class="founder-avatar">SD</div>
+            <div class="founder-info">
+                <h3>Samuel Dahunsi</h3>
+                <h4>Founder & Editor</h4>
+                <p>Based in Nigeria. Lifelong CCM listener. Writes about the artists and songs that have shaped his faith and his life — from the classics to whatever dropped last Friday.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>I LOVE CCM</h3>
+                <p>Chasing the heart behind the harmony.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Explore</h4>
+                <a href="index.html#spotlights">Spotlights</a>
+                <a href="index.html#playlists">Playlists</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <p>New spotlights straight to your inbox.</p>
+                <div class="newsletter-form">
+                    <input type="email" id="newsletter-email" placeholder="your@email.com" aria-label="Email address">
+                    <button type="button" id="newsletter-btn">Join</button>
+                </div>
+                <p class="newsletter-feedback" id="newsletter-feedback" aria-live="polite"></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 I LOVE CCM.
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("newsletter-btn").addEventListener("click", () => {
+            const input    = document.getElementById("newsletter-email");
+            const feedback = document.getElementById("newsletter-feedback");
+            const email    = input.value.trim();
+            const valid    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            if (!valid) {
+                feedback.textContent = "Please enter a valid email address.";
+                feedback.style.color = "#e05c3a";
+                return;
+            }
+
+            feedback.textContent = "You're in!";
+            feedback.style.color = "var(--accent-secondary)";
+            input.value = "";
+        });
+    </script>
+
+</body>
+</html>
