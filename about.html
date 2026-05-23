@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | The CCM Hub</title>
+    <title>About | I LOVE CCM</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .about-wrapper {
@@ -13,7 +13,7 @@
         }
 
         .about-hero {
-            margin-bottom: 52px;
+            margin-bottom: 48px;
         }
 
         .about-hero h1 {
@@ -28,7 +28,7 @@
 
         .about-hero .lead {
             font-family: var(--font-body);
-            font-size: 1.2rem;
+            font-size: 1.18rem;
             color: var(--text-muted);
             line-height: 1.75;
             font-style: italic;
@@ -57,6 +57,51 @@
         .about-body strong {
             color: var(--accent-primary);
             font-weight: 600;
+        }
+
+        .song-credit {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            margin: 8px 0 28px;
+        }
+
+        .song-credit p {
+            font-family: var(--font-ui);
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0 0 6px;
+            font-style: normal;
+        }
+
+        .song-credit p:last-child {
+            margin: 0;
+        }
+
+        .song-credit strong {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .artists-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 28px;
+        }
+
+        .artist-tag {
+            background: #f4eae6;
+            color: var(--accent-primary);
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
         }
 
         .founder-card {
@@ -119,31 +164,13 @@
             line-height: 1.65;
             margin: 0;
         }
-
-        .artists-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 8px 0 28px;
-        }
-
-        .artist-tag {
-            background: #f4eae6;
-            color: var(--accent-primary);
-            font-family: var(--font-ui);
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 6px 14px;
-            border-radius: 20px;
-            letter-spacing: 0.2px;
-        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo">The CCM Hub</a>
+            <a href="index.html" class="logo">I LOVE CCM</a>
             <nav class="nav-links">
                 <a href="index.html#spotlights">Spotlights</a>
                 <a href="index.html#playlists">Playlists</a>
@@ -156,7 +183,7 @@
 
         <div class="about-hero fade-up">
             <h1>About I LOVE CCM</h1>
-            <p class="lead">A Nigerian kid who grew up on Don Moen cassette tapes and never stopped listening.</p>
+            <p class="lead">A Nigerian kid who grew up on Don Moen and never really stopped.</p>
         </div>
 
         <hr class="about-divider">
@@ -164,21 +191,31 @@
         <div class="about-body fade-up fade-up-1">
 
             <p>
-                CCM has been part of my life for as long as I can remember. Growing up in Nigeria, I was that kid who knew every Don Moen song by heart before I really understood what worship even meant. The music just hit different. There was something about it that felt bigger than entertainment. It stayed with me.
+                CCM found me early. Growing up in Nigeria, Don Moen and Michael W. Smith were basically the soundtrack of my childhood. I knew their songs long before I fully understood what worship meant. Something about the music just got through in a way nothing else did, and honestly that has never changed.
             </p>
 
             <p>
-                Over the years my playlist got bigger. Those classic tape foundations expanded into incredible modern movements like Hillsong, Phil Wickham, Matthew West, and Elevation Worship.
-
-            <p>
-                I started I LOVE CCM because I wanted a place that actually takes this music seriously. Not just playlists and charts, but real conversations about the artists behind the songs, who they are, what drives them, and why their music connects the way it does. <strong>A space for people who love CCM the way I do.</strong>
+                I still listen to all of them. Don Moen, Michael W. Smith, Phil Wickham, Hillsong, Maverick City, Elevation Worship. The slow midnight worship songs and the loud Sunday morning praise tracks. I have never been loyal to just one sound within CCM because all of it means something to me in different ways.
             </p>
 
             <p>
-                If you've been listening since the Rich Mullins era or you just discovered CityAlight last week, you're in the right place. Pull up a chair.
+                Over time that love for the music went deeper than just listening. I started writing lyrics. In 2020 I had the opportunity to collaborate with <strong>Ark Anthems</strong> as a co-writer on a song called <em>Silent, Not Absent</em>, which is still available today. We also worked together on an earlier song called <em>Somebody Needs Your Prayer</em> which has since been taken down. Those two experiences showed me what it actually feels like to contribute to something that carries weight beyond just words on a page.
             </p>
 
-            <p style="font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.2px;">
+            <div class="song-credit">
+                <p>Co-written with Ark Anthems</p>
+                <p><strong>Silent, Not Absent</strong> &nbsp;·&nbsp; Available now</p>
+            </div>
+
+            <p>
+                I have over 14 songs written, finished and unfinished, sitting with me right now. Getting them produced is a different journey with its own challenges, but the writing keeps going regardless. One day.
+            </p>
+
+            <p>
+                I LOVE CCM came out of all of this. I wanted a space that actually goes deep on the artists and songs that matter in this genre. Not just surface coverage but real spotlights on the people behind the music, what drives them, and why what they make connects the way it does. <strong>For people who love CCM the way I do, and for people just finding it.</strong>
+            </p>
+
+            <p style="font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-muted);">
                 Some of the artists we love around here:
             </p>
 
@@ -194,7 +231,7 @@
             </div>
 
             <p>
-                New spotlights drop regularly. If there's an artist you think deserves a feature, we're all ears.
+                New spotlights drop regularly. If there is an artist you think deserves a feature, we are always listening.
             </p>
 
         </div>
@@ -203,8 +240,8 @@
             <div class="founder-avatar">SD</div>
             <div class="founder-info">
                 <h3>Samuel Dahunsi</h3>
-                <h4>Founder & Editor</h4>
-                <p>Based in Nigeria. Lifelong CCM listener. Writes about the artists and songs that have shaped his faith and his life — from the classics to whatever dropped last Friday.</p>
+                <h4>Founder · Writer · Lyricist</h4>
+                <p>Based in Nigeria. Lifelong CCM listener, lyricist, and aspiring artist. Writes about the music that has shaped his faith and his life, from the classics to whatever dropped last Friday.</p>
             </div>
         </div>
 
@@ -233,7 +270,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 I LOVE CCM.
+            &copy; 2026 I LOVE CCM. Built with heart.
         </div>
     </footer>
 
@@ -250,7 +287,7 @@
                 return;
             }
 
-            feedback.textContent = "You're in!";
+            feedback.textContent = "You're in! Welcome to the hub ✦";
             feedback.style.color = "var(--accent-secondary)";
             input.value = "";
         });
