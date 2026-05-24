@@ -730,17 +730,8 @@ footer {
 .fade-up-3 { animation-delay: 0.2s; }
 
 /* ==========================================
-   RESPONSIVE TWEAKS
+   RESPONSIVE TWEAKS — see Mobile Fixes below
    ========================================== */
-
-@media (max-width: 600px) {
-    .spotlight-content { padding: 28px 24px; }
-    .spotlight-title   { font-size: 1.6rem; }
-    .article-hero      { height: 260px; }
-    .article-title     { font-size: 1.8rem; }
-    .nav-links         { gap: 16px; }
-    .article-wrapper   { padding: 32px 16px 60px; }
-}
 
 /* ==========================================
    PLAYLIST EMBED (toggled open on card click)
@@ -762,4 +753,53 @@ footer {
     border: none !important;
     border-radius: var(--radius-card) !important;
     display: block;
+}
+
+/* ==========================================
+   MOBILE FIXES
+   ========================================== */
+
+@media (max-width: 600px) {
+    /* Nav — stop logo wrapping to two lines */
+    .logo              { white-space: nowrap; font-size: 1.05rem; letter-spacing: 1px; }
+    .nav-links         { gap: 16px; }
+
+    /* Main spacing — remove excess top gap */
+    main               { padding-top: 24px; }
+
+    /* Hero card */
+    .spotlight-content { padding: 28px 20px; }
+    .spotlight-title   { font-size: 1.5rem; }
+    .spotlight-img     { min-height: 260px; }
+    .spotlight-excerpt { font-size: 0.92rem; }
+
+    /* Article page */
+    .article-hero      { height: 220px; }
+    .article-title     { font-size: 1.7rem; }
+    .article-wrapper   { padding: 24px 16px 60px; }
+    .article-body      { font-size: 1.05rem; line-height: 1.8; }
+
+    /* Byline — wrap cleanly on small screens, hide separator dots */
+    .article-byline    { flex-wrap: wrap; gap: 4px 10px; padding-bottom: 20px; margin-bottom: 28px; }
+    .byline-dot        { display: none; }
+    .byline-text       { font-size: 0.8rem; }
+
+    /* Post cards */
+    .post-card         { grid-template-columns: 76px 1fr; gap: 12px; padding: 12px; }
+    .post-thumb        { width: 76px; height: 76px; }
+    .post-card-title   { font-size: 0.95rem; }
+    .post-card-excerpt { font-size: 0.8rem; }
+
+    /* Music embed */
+    .music-embed-box   { padding: 18px 14px; margin-top: 36px; }
+
+    /* Section titles */
+    .section-title     { font-size: 1.3rem; margin-bottom: 20px; }
+
+    /* Footer */
+    footer             { padding: 36px 0 0; margin-top: 48px; }
+    .footer-brand p    { max-width: 100%; }
+    .newsletter-form   { flex-direction: column; }
+    .newsletter-form input  { width: 100%; }
+    .newsletter-form button { width: 100%; padding: 12px; }
 }
