@@ -760,9 +760,11 @@ footer {
    ========================================== */
 
 @media (max-width: 600px) {
-    /* Nav — stop logo wrapping to two lines */
-    .logo              { white-space: nowrap; font-size: 1.05rem; letter-spacing: 1px; }
-    .nav-links         { gap: 16px; }
+    /* Nav — fix logo crowding nav links on mobile */
+    .logo              { white-space: nowrap; font-size: 0.95rem; letter-spacing: 1px; }
+    .nav-links         { gap: 12px; }
+    .nav-links a       { font-size: 0.78rem; }
+    .nav-container     { gap: 12px; }
 
     /* Main spacing — remove excess top gap */
     main               { padding-top: 24px; }
