@@ -203,23 +203,42 @@
     </footer>
 
     <script>
-        document.getElementById("newsletter-btn").addEventListener("click", () => {
-            const input    = document.getElementById("newsletter-email");
-            const feedback = document.getElementById("newsletter-feedback");
-            const email    = input.value.trim();
-            const valid    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+       document.getElementById("newsletter-btn").addEventListener("click", async () => {
+    const input    = document.getElementById("newsletter-email");
+    const feedback = document.getElementById("newsletter-feedback");
+    const email    = input.value.trim();
+    const valid    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-            if (!valid) {
-                feedback.textContent = "Please enter a valid email address.";
-                feedback.style.color = "#e05c3a";
-                return;
-            }
+    if (!valid) {
+        feedback.textContent = "Please enter a valid email address.";
+        feedback.style.color = "#e05c3a";
+        return;
+    }
 
+    feedback.textContent = "Subscribing...";
+    feedback.style.color = "var(--text-muted)";
+
+    try {
+        const res  = await fetch("/api/subscribe", {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
             feedback.textContent = "You're in! Welcome to the hub ✦";
             feedback.style.color = "var(--accent-secondary)";
             input.value = "";
-        });
-    </script>
+        } else {
+            feedback.textContent = data.error || "Something went wrong. Try again.";
+            feedback.style.color = "#e05c3a";
+        }
+    } catch (err) {
+        feedback.textContent = "Connection error. Please try again.";
+        feedback.style.color = "#e05c3a";
+    }
+});    </script>
 
 </body>
 </html>
