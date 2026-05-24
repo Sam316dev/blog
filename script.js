@@ -7,13 +7,15 @@ const BASE_URL     = `https://cdn.contentful.com/spaces/${SPACE_ID}/environments
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop";
 
 // ==========================================
-// BOOT
+// BOOT — fetch posts and playlists in parallel
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
-    const posts = await fetchAllPosts();
+    const [posts, playlists] = await Promise.all([
+        fetchAllPosts(),
+        fetchAllPlaylists()
+    ]);
 
     if (posts === null) {
-        // Network / API error
         showIndexError("Couldn't reach the archive. Please check your connection and refresh.");
         return;
     }
@@ -25,6 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     renderHero(posts);
     renderRecentPosts(posts);
+    renderPlaylists(playlists);
 });
 
 // ==========================================
@@ -45,12 +48,28 @@ async function fetchAllPosts() {
 }
 
 // ==========================================
-// PARSE CONTENTFUL RESPONSE → CLEAN OBJECTS
+// FETCH ALL PLAYLISTS
+// ==========================================
+async function fetchAllPlaylists() {
+    const url = `${BASE_URL}/entries?access_token=${ACCESS_TOKEN}&content_type=playlist&order=sys.createdAt&include=1`;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        return parsePlaylists(data);
+    } catch (err) {
+        console.error("fetchAllPlaylists failed:", err);
+        return [];
+    }
+}
+
+// ==========================================
+// PARSE POSTS
 // ==========================================
 function parsePosts(data) {
     if (!data.items?.length) return [];
 
-    // Build asset ID → CDN URL map
     const imageMap = {};
     (data.includes?.Asset ?? []).forEach(asset => {
         if (asset.sys?.id && asset.fields?.file?.url) {
@@ -73,15 +92,39 @@ function parsePosts(data) {
 }
 
 // ==========================================
+// PARSE PLAYLISTS
+// ==========================================
+function parsePlaylists(data) {
+    if (!data.items?.length) return [];
+
+    const imageMap = {};
+    (data.includes?.Asset ?? []).forEach(asset => {
+        if (asset.sys?.id && asset.fields?.file?.url) {
+            imageMap[asset.sys.id] = "https:" + asset.fields.file.url;
+        }
+    });
+
+    return data.items.map(item => {
+        const f       = item.fields;
+        const imageId = f.image?.sys?.id ?? null;
+        return {
+            title:     f.title     ?? "Untitled Playlist",
+            excerpt:   f.excerpt   ?? "",
+            slug:      f.slug      ?? item.sys.id,
+            embedCode: f.embedCode ?? null,
+            imageUrl:  imageId ? imageMap[imageId] : FALLBACK_IMG,
+        };
+    });
+}
+
+// ==========================================
 // RENDER HERO
 // ==========================================
 function renderHero(posts) {
     const hero = posts[0];
 
     const heroImg = document.getElementById("hero-img");
-    if (heroImg) {
-        heroImg.style.backgroundImage = `url('${hero.imageUrl}')`;
-    }
+    if (heroImg) heroImg.style.backgroundImage = `url('${hero.imageUrl}')`;
 
     const heroTitle = document.getElementById("hero-title");
     if (heroTitle) heroTitle.textContent = hero.title;
@@ -90,13 +133,11 @@ function renderHero(posts) {
     if (heroExcerpt) heroExcerpt.textContent = hero.excerpt;
 
     const heroBtn = document.getElementById("hero-btn");
-    if (heroBtn) {
-        heroBtn.addEventListener("click", () => goToPost(hero.slug));
-    }
+    if (heroBtn) heroBtn.addEventListener("click", () => goToPost(hero.slug));
 }
 
 // ==========================================
-// RENDER RECENT POSTS GRID
+// RENDER RECENT POSTS
 // ==========================================
 function renderRecentPosts(posts) {
     const container = document.getElementById("posts-container");
@@ -121,13 +162,11 @@ function renderRecentPosts(posts) {
         </article>
     `).join("");
 
-    // Single delegated listener — no inline onclick, no globals
     container.addEventListener("click", e => {
         const card = e.target.closest(".post-card[data-slug]");
         if (card) goToPost(card.dataset.slug);
     });
 
-    // Keyboard accessibility
     container.addEventListener("keydown", e => {
         if (e.key === "Enter") {
             const card = e.target.closest(".post-card[data-slug]");
@@ -137,7 +176,74 @@ function renderRecentPosts(posts) {
 }
 
 // ==========================================
-// ROUTING — slug in URL query param, no localStorage
+// RENDER PLAYLISTS
+// If embedCode exists, show an expandable embed.
+// If not, show the card with a coming soon state.
+// Either way the card always renders cleanly.
+// ==========================================
+function renderPlaylists(playlists) {
+    const container = document.getElementById("playlists-container");
+    if (!container) return;
+
+    if (!playlists || playlists.length === 0) {
+        container.innerHTML = `<p class="loading-state">Playlists coming soon.</p>`;
+        return;
+    }
+
+    container.innerHTML = playlists.map((pl, i) => `
+        <div class="playlist-card" data-index="${i}">
+            <div class="playlist-info">
+                <h4>${escHtml(pl.title)}</h4>
+                <p>${escHtml(pl.excerpt)}</p>
+            </div>
+            <div class="play-icon" aria-hidden="true">
+                ${pl.embedCode ? "▶" : "♪"}
+            </div>
+        </div>
+        ${pl.embedCode ? `
+        <div class="playlist-embed" id="playlist-embed-${i}" style="display:none; margin-bottom: 16px;">
+            <div class="playlist-embed-inner">
+                ${cleanEmbed(pl.embedCode)}
+            </div>
+        </div>` : ""}
+    `).join("");
+
+    // Toggle embed open/close on card click
+    container.addEventListener("click", e => {
+        const card = e.target.closest(".playlist-card[data-index]");
+        if (!card) return;
+
+        const index  = card.dataset.index;
+        const embed  = document.getElementById(`playlist-embed-${index}`);
+        if (!embed) return;
+
+        const isOpen = embed.style.display === "block";
+        
+        // Close all other open embeds first
+        container.querySelectorAll(".playlist-embed").forEach(el => {
+            el.style.display = "none";
+        });
+        container.querySelectorAll(".playlist-card").forEach(el => {
+            el.classList.remove("active");
+        });
+
+        // Toggle this one
+        if (!isOpen) {
+            embed.style.display = "block";
+            card.classList.add("active");
+        }
+    });
+}
+
+// Clean any escaped quotes from Contentful
+function cleanEmbed(code) {
+    return String(code)
+        .replace(/\\"/g, '"')
+        .replace(/\\'/g, "'");
+}
+
+// ==========================================
+// ROUTING
 // ==========================================
 function goToPost(slug) {
     window.location.href = `post.html?slug=${encodeURIComponent(slug)}`;
